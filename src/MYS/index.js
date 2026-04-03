@@ -135,7 +135,10 @@ async function Sign_In(cookie, gameKey) {
   const REGION = { Genshin: 'cn_gf01', StarRail: 'prod_gf_cn', Zenless: 'prod_gf_cn' }
   const SIGNGAME = { Genshin: 'hk4e', StarRail: 'hkrpg', Zenless: 'nap' }
 
-  const headers = await getHeaders(cookie, { ...SIGN_HEADERS, 'x-rpc-signgame': SIGNGAME[gameKey] })
+  let headers = await getHeaders(cookie, { ...SIGN_HEADERS, 'x-rpc-signgame': SIGNGAME[gameKey] })
+  if (gameKey === 'Zenless') {
+    headers = await getHeaders(cookie, { ...SIGN_HEADERS, 'x-rpc-signgame': 'zzz' })
+  }
   const data = {
     act_id: ACT_ID[gameKey],
     region: REGION[gameKey],
@@ -143,6 +146,9 @@ async function Sign_In(cookie, gameKey) {
     lang: 'zh-cn'
   }
   let url = `https://${WEB_HOST}/event/luna/${SIGNGAME[gameKey]}/sign`
+  if (gameKey === 'Zenless') {
+    url = `https://${WEB_HOST}/event/luna/zzz/sign`
+  }
   try {
     const res = await $axios.request({
       method: 'POST',
