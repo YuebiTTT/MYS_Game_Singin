@@ -142,15 +142,19 @@ async function Sign_In(cookie, gameKey) {
     uid: ROLE[gameKey].game_uid,
     lang: 'zh-cn'
   }
-  const res = await $axios.request({
-    method: 'POST',
-    headers,
-    data,
-    url: `https://${WEB_HOST}/event/luna/${SIGNGAME[gameKey]}/sign`
-  }).catch(err => {
-    console.error('Sign-in error\n' + err)
-  })
-  console.log(`<${ROLE[gameKey].nickname}(${ROLE[gameKey].game_uid})> Sign-in ${res?.data?.message === 'OK' ? 'successful' : 'failed'}: `, JSON.stringify(res.data))
+  let url = `https://${WEB_HOST}/event/luna/${SIGNGAME[gameKey]}/sign`
+  try {
+    const res = await $axios.request({
+      method: 'POST',
+      headers,
+      data,
+      url
+    })
+    console.log(`<${ROLE[gameKey].nickname}(${ROLE[gameKey].game_uid})> Sign-in ${res?.data?.message === 'OK' ? 'successful' : 'failed'}: `, JSON.stringify(res.data))
+  } catch (err) {
+    console.error(`<${ROLE[gameKey].nickname}(${ROLE[gameKey].game_uid})> Sign-in error:`, err.message)
+    console.log(`API URL: ${url}`)
+  }
 }
 
 const doMYSSign = async (gameKey) => {
