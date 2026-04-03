@@ -23,6 +23,16 @@ let ROLE = {
     is_chosen: false,
     region_name: '',
     is_official: false
+  },
+  Zenless: {
+    game_biz: '',
+    region: '',
+    game_uid: '',
+    nickname: '',
+    level: -1,
+    is_chosen: false,
+    region_name: '',
+    is_official: false
   }
 }
 
@@ -65,10 +75,10 @@ const getCookieConfig = async () => {
   const MYSCookies = process.env.MYS_COOKIES;
   if (!MYSCookies) {
     console.error("Missing required environment variables.");
-    return { Genshin: [], StarRail: [] }
+    return { Genshin: [], StarRail: [], Zenless: [] }
   }
   const MYSCookieArr = MYSCookies ? MYSCookies.split(',') : []
-  return { Genshin: MYSCookieArr, StarRail: MYSCookieArr }
+  return { Genshin: MYSCookieArr, StarRail: MYSCookieArr, Zenless: MYSCookieArr }
 }
 
 const randomSleep = (min, max) => {
@@ -90,7 +100,7 @@ const getHeaders = async (Cookie, whichHeader) => {
 }
 
 const getRole = async (cookie, gameKey) => {
-  const GAME_BIZ = { Genshin: 'hk4e_cn', StarRail: 'hkrpg_cn' }
+  const GAME_BIZ = { Genshin: 'hk4e_cn', StarRail: 'hkrpg_cn', Zenless: 'nap_cn' }
   const headers = await getHeaders(cookie, ROLE_HEADERS)
   const res = await $axios.request({
     method: 'GET',
@@ -121,9 +131,9 @@ const getRole = async (cookie, gameKey) => {
 }
 
 async function Sign_In(cookie, gameKey) {
-  const ACT_ID = { Genshin: 'e202311201442471', StarRail: 'e202304121516551' }
-  const REGION = { Genshin: 'cn_gf01', StarRail: 'prod_gf_cn' }
-  const SIGNGAME = { Genshin: 'hk4e', StarRail: 'hkrpg' }
+  const ACT_ID = { Genshin: 'e202311201442471', StarRail: 'e202304121516551', Zenless: 'e202403191520321' }
+  const REGION = { Genshin: 'cn_gf01', StarRail: 'prod_gf_cn', Zenless: 'prod_gf_cn' }
+  const SIGNGAME = { Genshin: 'hk4e', StarRail: 'hkrpg', Zenless: 'nap' }
 
   const headers = await getHeaders(cookie, { ...SIGN_HEADERS, 'x-rpc-signgame': SIGNGAME[gameKey] })
   const data = {
